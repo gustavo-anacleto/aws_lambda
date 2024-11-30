@@ -1,20 +1,31 @@
-name: deploy to lambda
-on: [push]
+name: Deploy Lambda
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  deploy_zip:
-    name: deploy lambda function
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checkout source code
-        uses: actions/checkout@v3
-      - name: Generate Zip
-        run: |
-         zip deployment.zip *.mjs
-      - name: default deploy
-        uses: appleboy/lambda-action@v0.2.0
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION }}
-          function_name: segundaFuncao
-          zip_file: deployment.zip
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Zip Lambda Code
+      run: |
+        zip -r function.zip .
+
+    - name: Deploy Lambda Function
+      run: |
+        aws lambda update-function-code \
+          --function-name my-lambda-function \
+          --zip-file fileb://function.zip
