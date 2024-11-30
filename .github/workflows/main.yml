@@ -1,7 +1,6 @@
 name: deploy to lambda
 on: [push]
 jobs:
-
   deploy_zip:
     name: deploy lambda function
     runs-on: ubuntu-latest
@@ -17,6 +16,5 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
-          function_name: primeiraFuncao
-          zip_file: deployment.zip  
-          debug: true
+          function_name: segundaFuncao
+          zip_file: deployment.zip
